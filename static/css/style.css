@@ -81,7 +81,7 @@ html,body{
 }
 
 .form-control{
-  border-color: #1ab394 !important;
+  border-color: #1890FF !important;
   padding: 6px 6px !important;
 }
 
@@ -109,7 +109,7 @@ pre{
 
 .title h2{
   margin-bottom: 20px;
-  color: #4aa593;
+  color: #1890FF;
 }
 
 .answer{
@@ -186,12 +186,12 @@ pre{
 }
 
 .answer .others .common .settings-common span{
-  color: #1ab394;
+  color: #1890FF;
   cursor: default;
 }
 .answer .others .common .settings-common a{
   font-size: 14px;
-  color: #1ab394;
+  color: #1890FF;
   cursor: pointer;
   text-decoration: none;
 }
@@ -241,11 +241,11 @@ input[type="checkbox"] {
 }
 
 input[type="checkbox"]:checked + .check-trail {
-  background: #1ab394a3;
+  background: #1890FFa3;
 }
 input[type="checkbox"]:checked + .check-trail .check-handler {
   margin-left: 26px;
-  background: #1ab394;
+  background: #1890FF;
 }
 input[type="checkbox"]:checked + .check-trail .check-handler::before {
   content: "✔";
@@ -260,7 +260,7 @@ input[type="checkbox"]:checked + .check-trail .check-handler::before {
   height: 30px;
   line-height: 30px;
   text-align: center;
-  color: #1ab394;
+  color: #1890FF;
   cursor: pointer;
 }
 
@@ -274,7 +274,7 @@ input[type="checkbox"]:checked + .check-trail .check-handler::before {
   padding-right: 15px;
   border-radius: 10px;
   height: 50px;
-  border: 1px solid rgba(26, 179, 148, 0.8);
+  border: 1px solid rgba(24, 144, 255, 0.8);
   box-shadow: 0px 0px 10px 0px rgba(26, 179, 148, 0.2);
 }
 .answer .ipt textarea {
@@ -346,16 +346,16 @@ input[type="checkbox"]:checked + .check-trail .check-handler::before {
 }
 
 .message-bubble .response .loading-icon{
-  color: #1ab394;
+  color: #1890FF;
 }
 
 .answer #chatBtn{
-  background-color: #1ab394;
-  border-color: #1ab394;
+  background-color: #1890FF;
+  border-color: #1890FF;
 }
 
 .answer #chatBtn:focus{
-  outline:5px auto #1ab394 !important;
+  outline:5px auto #1890FF !important;
 }
 
 .foot p:first-child{
@@ -371,6 +371,6 @@ input[type="checkbox"]:checked + .check-trail .check-handler::before {
   margin-right: 10px;
   font-weight: 400;
   font-size: 14px;
-  color:#1ab394;
+  color:#1890FF;
   text-decoration:none;
 }
