@@ -136,7 +136,8 @@ $(document).ready(function() {
         let line = lines[i].trim();
         if (!line) continue;
         
-        // Handle SSE format (remove "data: " prefix)
+        // Handle SSE format
+        if (line.startsWith('event:')) continue; // Skip event lines
         if (line.startsWith('data:')) {
             line = line.substring(5).trim();
         }
@@ -150,21 +151,30 @@ $(document).ready(function() {
         }
 
         // Handle Coze streaming response
-        // Usually event: message, data: { content: "...", ... }
-        // Or workflow response
-        if (jsonObj.content) {
+        // data: {"type": "answer", "content": {"answer": "..."}}
+        if (jsonObj.type === 'answer' && jsonObj.content && typeof jsonObj.content.answer === 'string') {
+             str += jsonObj.content.answer;
+             addResponseMessage(str);
+             resFlag = true;
+        } 
+        // Handle message_start or other control events (ignore content.answer if null)
+        else if (jsonObj.type === 'message_start' || jsonObj.type === 'message_end') {
+             // Do nothing or show status
+        }
+        // Fallback for other formats or legacy
+        else if (typeof jsonObj.content === 'string') {
              str += jsonObj.content;
              addResponseMessage(str);
              resFlag = true;
-        } else if (jsonObj.data && jsonObj.data.content) {
+        } else if (jsonObj.data && typeof jsonObj.data.content === 'string') {
              str += jsonObj.data.content;
              addResponseMessage(str);
              resFlag = true;
-        } else if (jsonObj.message) {
+        } else if (jsonObj.message && typeof jsonObj.message === 'string') {
              str += jsonObj.message;
              addResponseMessage(str);
              resFlag = true;
-        } else if (jsonObj.delta) { // OpenAI style fallback or Coze generic
+        } else if (jsonObj.delta) { 
              str += jsonObj.delta;
              addResponseMessage(str);
              resFlag = true;
