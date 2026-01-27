@@ -27,7 +27,7 @@
           <div class="function">
             <div class="others">
               <div class="left">
-                <div class="settings common dropup">
+                <div class="settings common dropup" style="display: none;">
                   <a class="dropdown-toggle icon-style" id="dropdownMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="设置">
                     <i class="fa fa-cogs fa-lg" aria-hidden="true"></i>
                   </a>
@@ -45,15 +45,17 @@
                       </select>
                     </div>
                     <div class="settings-common">
-                      <span><i class="fa fa-key fa-lg" aria-hidden="true"></i>&nbsp; OpenAI Key</span>
-                      <input type="text" class="form-control ipt-common api-key" placeholder="可用自己的api key">
+                      <span><i class="fa fa-key fa-lg" aria-hidden="true"></i>&nbsp; API Key / Token</span>
+                      <input type="text" class="form-control ipt-common api-key" placeholder="可用自己的 Coze Token">
                     </div>
+                    <!-- 
                     <div class="settings-common">
                       <span><i class="fa fa-reddit-alien fa-lg" aria-hidden="true"></i>&nbsp; OpenAI 模型</span>
                       <select class="form-control ipt-common">
                         <option>gpt-3.5-turbo</option>
                       </select>
-                    </div>
+                    </div> 
+                    -->
                     <div class="settings-common">
                       <span><i class="fa fa-floppy-o fa-lg" aria-hidden="true"></i>&nbsp; 记录对话内容，刷新不会消失</span>
                       <div class="chck-btn">
@@ -92,7 +94,7 @@
               <div class="col-xs-12">
                 <textarea id="chatInput" class="form-control" rows="1"></textarea>
               </div>
-              <button id="chatBtn" class="btn btn-primary" type="button">Go !</button>
+              <button id="chatBtn" class="btn btn-primary" type="button">发送</button>
             </div>
           </div>
         </div>

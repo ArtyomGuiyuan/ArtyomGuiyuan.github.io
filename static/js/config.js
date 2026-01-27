@@ -1,5 +1,5 @@
 const config = {
-    // gpt3.5 官方接口：https://api.openai.com/v1/chat/completions
-    url: "https://open.aiproxy.xyz/v1/chat/completions",  // gpt3.5代理接口
-    apiKey: ""  // openAi Base64 编码 apiKey
-};  
+    url: "https://wvkrv2jwst.coze.site/stream_run",
+    apiKey: "eyJhbGciOiJSUzI1NiIsImtpZCI6IjYzMTc1ZWNiLWY2MzQtNDEzOC1hODFjLTczOTJkZWE0Zjk3YiJ9.eyJpc3MiOiJodHRwczovL2FwaS5jb3plLmNuIiwiYXVkIjpbIm03U1pvMVdsVWVyWVQwbG9UZVEyRVFhclBkM2ZsTHVWIl0sImV4cCI6ODIxMDI2Njg3Njc5OSwiaWF0IjoxNzY5NDA3NzM3LCJzdWIiOiJzcGlmZmU6Ly9hcGkuY296ZS5jbi93b3JrbG9hZF9pZGVudGl0eS9pZDo3NTk0NjkyMDcxMTQ3OTYyMzk1Iiwic3JjIjoiaW5ib3VuZF9hdXRoX2FjY2Vzc190b2tlbl9pZDo3NTk5NTQ4MzY3MDEzNjc1MDQzIn0.iwyO0K0EZJHousx5-rsuFlpc3ikdp8v8lMEsewQp3CCAtyjVvY2zKBIlt7ZvWTO7K8nv21I1d1VZf3qsWolb-VRXXaD_FGPpMrDBmSrilmpQZDw3Dn13h5s-yhJE3uzY0PvQ9N8lSvMD_TEBhBpWKWv1Ey8IMgbD4TYf4Sye30rwj55_hOB3bhPwhoDRsMUPitmdU2RJHgOBoNYi5mfIXFPF9Nznlw2dNadRIyAEBwUiEkyncarfbhRVspJrUGllsfAlnpQrUn9JCl0dHGEMTimMalXT1ZhPpkqgY-lVz5RrT2zF2149Y46G32QyZ7T8jHXHs5y77kjTuzIKhL-t7w",
+    projectId: "7594684442116030491"
+};

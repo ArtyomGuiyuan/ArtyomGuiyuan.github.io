@@ -89,52 +89,93 @@ $(document).ready(function() {
 
   // 发送请求获得响应
   async function sendRequest(data) {
+    const payload = {
+      "content": { 
+        "query": { 
+          "prompt": [ 
+            { 
+              "type": "text", 
+              "content": { 
+                "text": data.prompt
+              } 
+            } 
+          ] 
+        } 
+      }, 
+      "type": "query", 
+      "session_id": data.sessionId || "Zi4LBPNkYykLfCIeTuuK4", 
+      "project_id": config.projectId 
+    };
+
+    // Ensure project_id is sent as a number if it's stored as a string
+    let bodyStr = JSON.stringify(payload);
+    bodyStr = bodyStr.replace(/"project_id":"(\d+)"/, '"project_id":$1');
+
     const response = await fetch(config.url, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         'Authorization': 'Bearer ' + data.apiKey
       },
-      body: JSON.stringify({
-        "messages": data.prompts,
-        "model": "gpt-3.5-turbo",
-        "max_tokens": 1025,
-        "temperature": 0.5,
-        "top_p": 1,
-        "n": 1,
-        "stream": true
-      })
+      body: bodyStr
     }); 
   
     const reader = response.body.getReader();
     let res = '';
-    let str;
+    let str = '';
     while (true) {
       const { done, value } = await reader.read();
       if (done) {
         break;
       }
-      str = '';
-      res += new TextDecoder().decode(value).replace(/^data: /gm, '').replace("[DONE]",'');
-      const lines = res.trim().split(/[\n]+(?=\{)/);
+      res += new TextDecoder().decode(value);
+      const lines = res.split('\n');
+      res = lines.pop(); // Keep the last incomplete line
+      
       for (let i = 0; i < lines.length; i++) {
-        const line = lines[i];
+        let line = lines[i].trim();
+        if (!line) continue;
+        
+        // Handle SSE format (remove "data: " prefix)
+        if (line.startsWith('data:')) {
+            line = line.substring(5).trim();
+        }
+        
         let jsonObj;
         try{
           jsonObj = JSON.parse(line);
         }catch(e){
-          break;
+          console.log('Error parsing JSON:', line);
+          continue;
         }
-        if (jsonObj.choices && jsonObj.choices[0].delta.content) {
-          str += jsonObj.choices[0].delta.content;
-          addResponseMessage(str);
-          resFlag = true;
-        }else{
-          if(jsonObj.error){
-            addFailMessage(jsonObj.error.type + " : " + jsonObj.error.message + jsonObj.error.code);
+
+        // Handle Coze streaming response
+        // Usually event: message, data: { content: "...", ... }
+        // Or workflow response
+        if (jsonObj.content) {
+             str += jsonObj.content;
+             addResponseMessage(str);
+             resFlag = true;
+        } else if (jsonObj.data && jsonObj.data.content) {
+             str += jsonObj.data.content;
+             addResponseMessage(str);
+             resFlag = true;
+        } else if (jsonObj.message) {
+             str += jsonObj.message;
+             addResponseMessage(str);
+             resFlag = true;
+        } else if (jsonObj.delta) { // OpenAI style fallback or Coze generic
+             str += jsonObj.delta;
+             addResponseMessage(str);
+             resFlag = true;
+        }
+        
+        if(jsonObj.error){
+            addFailMessage(jsonObj.error.message || "Error occurred");
             resFlag = false;
-          }
-        } 
+        }
+        // Log for debugging
+        console.log('Stream chunk:', jsonObj);
       }
     }
     return str;
@@ -146,11 +187,11 @@ $(document).ready(function() {
     chatInput.off("keydown",handleEnter);
     
     // 保存api key与对话数据
-    let data;
+    let data = {};
     if(config.apiKey !== ''){
-      data = { "apiKey": atob(config.apiKey)}; 
+      data.apiKey = config.apiKey; 
     }else{
-      data = { "apiKey": ""};
+      data.apiKey = "";
     }
    
     let apiKey = localStorage.getItem('apiKey');
@@ -171,25 +212,7 @@ $(document).ready(function() {
     // 收到回复前让按钮不可点击
     chatBtn.attr('disabled',true)
 
-    if(messages.length>40){
-      addFailMessage("此次对话长度过长，请点击下方删除按钮清除对话内容！");
-      // 重新绑定键盘事件
-      chatInput.on("keydown",handleEnter);
-      chatBtn.attr('disabled',false) // 让按钮可点击
-      return ;
-    }
-
-    // 判读是否已开启连续对话
-    if(localStorage.getItem('continuousDialogue') == 'true'){
-        // 控制上下文，对话长度超过4轮，取最新的3轮,即数组最后7条数据
-      data.prompts = messages.slice();  // 拷贝一份全局messages赋值给data.prompts,然后对data.prompts处理
-      if (data.prompts.length > 8) {
-        data.prompts.splice(0, data.prompts.length - 7);
-      }
-    }else{
-      data.prompts = messages.slice();
-      data.prompts.splice(0, data.prompts.length - 1); // 未开启连续对话，取最后一条
-    }
+    data.prompt = message;
       
     sendRequest(data).then((res) => {
       chatInput.val('');
@@ -433,9 +456,9 @@ $(document).ready(function() {
   });
 
   // 禁止键盘F12键
-  document.addEventListener('keydown',function(e){
-    if(e.key == 'F12'){
-        e.preventDefault(); // 如果按下键F12,阻止事件
-    }
-  });
+  // document.addEventListener('keydown',function(e){
+  //   if(e.key == 'F12'){
+  //       e.preventDefault(); // 如果按下键F12,阻止事件
+  //   }
+  // });
 });
