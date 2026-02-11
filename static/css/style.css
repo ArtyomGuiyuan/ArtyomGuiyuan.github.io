@@ -293,11 +293,36 @@ input[type="checkbox"]:checked + .check-trail .check-handler::before {
   max-height: calc(100% - 100px);
   height:auto;
   overflow-y: auto;
-}
-
 .message-bubble {
   padding: 5px;
   margin: 10px;
+}
+
+/* 欢迎消息按钮样式 */
+.welcome-btn-group {
+  margin-top: 10px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.welcome-btn {
+  background-color: transparent;
+  border: 1px solid #1890FF;
+  color: #1890FF;
+  padding: 5px 12px;
+  border-radius: 15px;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.welcome-btn:hover {
+  background-color: #1890FF;
+  color: white;
+}
+
+.message-bubble {
   display: flex;
   align-items: flex-start;
   border-bottom: 1px dashed #e7eaec;

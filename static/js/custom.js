@@ -85,6 +85,43 @@ $(document).ready(function() {
     chatWindow.scrollTop(chatWindow.prop('scrollHeight'));
     messages.pop() // 失败就让用户输入信息从数组删除
   }
+
+  // 生成按钮 HTML
+  function generateButtonsHtml() {
+    // 计算昨天的日期
+    let yesterday = new Date();
+    yesterday.setDate(yesterday.getDate() - 1);
+    let year = yesterday.getFullYear();
+    let month = yesterday.getMonth() + 1;
+    let day = yesterday.getDate();
+    let dateStr = year + "年" + month + "月" + day + "日";
+    
+    return '<div class="welcome-btn-group">' +
+        '<button class="welcome-btn" onclick="sendWelcomeMsg(\'生成昨天的核聚变资讯报告\')">生成昨天的核聚变资讯报告</button>' +
+        '<button class="welcome-btn" onclick="sendWelcomeMsg(\'生成' + dateStr + '的聚变资讯报告\')">生成' + dateStr + '的聚变资讯报告</button>' +
+        '<button class="welcome-btn" onclick="sendWelcomeMsg(\'生成最新的聚变资讯报告\')">生成最新的聚变资讯报告</button>' +
+      '</div>';
+  }
+
+  // 添加欢迎消息
+  function addWelcomeMessage() {
+    let welcomeText = "👋 你好！我是可控核聚变领域专业资讯报告生成助手。\n\n我可以为您提供最新的聚变资讯、生成专业报告，或回答相关技术问题。请直接在下方输入您的需求。";
+    let escapedMessage = marked.parse(welcomeText);
+    
+    let welcomeElement = $('<div class="message-bubble"><span class="chat-icon response-icon"></span><div class="message-text response">' + escapedMessage + 
+      generateButtonsHtml() +
+    '</div></div>');
+    
+    chatWindow.append(welcomeElement);
+    $(".answer .tips").hide();
+    chatWindow.scrollTop(chatWindow.prop('scrollHeight'));
+  }
+
+  // 暴露给全局的点击发送函数
+  window.sendWelcomeMsg = function(msg) {
+    $('#chatInput').val(msg);
+    $('#chatBtn').click();
+  };
   
 
   // 发送请求获得响应
@@ -232,6 +269,15 @@ $(document).ready(function() {
       chatInput.on("keydown",handleEnter); 
       // 判断是否是回复正确信息
       if(resFlag){
+        // 在 AI 回复内容后追加快捷按钮
+        let responseContent = res;
+        // 如果想在页面显示的最后一条消息加按钮，需要操作 DOM，因为 res 只是文本内容
+        // 这里我们重新构建一条带按钮的消息对象存入历史记录（可选），或者只在页面追加
+        
+        // 找到最后一条 AI 回复的 DOM 元素，追加按钮
+        let lastResponseElement = $(".message-bubble .response").last();
+        lastResponseElement.append(generateButtonsHtml());
+        
         messages.push({"role": "assistant", "content": res});
         // 判断是否本地存储历史会话
         if(localStorage.getItem('archiveSession')=="true"){
@@ -354,6 +400,11 @@ $(document).ready(function() {
     }
   }
 
+  // 如果没有历史记录，显示欢迎语
+  if (messages.length === 0) {
+    addWelcomeMessage();
+  }
+
   // 是否连续对话
   var continuousDialogue = localStorage.getItem('continuousDialogue');
 
@@ -380,9 +431,9 @@ $(document).ready(function() {
   // 删除功能
   $(".delete a").click(function(){
     chatWindow.empty();
-    $(".answer .tips").css({"display":"flex"});
     messages = [];
     localStorage.removeItem("session");
+    addWelcomeMessage();
   });
 
   // 截图功能
