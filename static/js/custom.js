@@ -117,10 +117,13 @@ $(document).ready(function() {
     chatWindow.scrollTop(chatWindow.prop('scrollHeight'));
   }
 
-  // 暴露给全局的点击发送函数
+  // 暴露给全局的点击填充函数（仅填充不发送）
   window.sendWelcomeMsg = function(msg) {
     $('#chatInput').val(msg);
-    $('#chatBtn').click();
+    // 聚焦输入框，方便用户直接修改或发送
+    $('#chatInput').focus();
+    // 自动调整输入框高度（如果有自动高度调整逻辑的话，触发 input 事件）
+    $('#chatInput').trigger('input');
   };
   
 
