@@ -100,6 +100,11 @@ $(document).ready(function() {
         '<button class="welcome-btn" onclick="sendWelcomeMsg(\'生成昨天的核聚变资讯报告\')">生成昨天的核聚变资讯报告</button>' +
         '<button class="welcome-btn" onclick="sendWelcomeMsg(\'生成' + dateStr + '的聚变资讯报告\')">生成' + dateStr + '的聚变资讯报告</button>' +
         '<button class="welcome-btn" onclick="sendWelcomeMsg(\'生成最新的聚变资讯报告\')">生成最新的聚变资讯报告</button>' +
+      '</div>' +
+      '<div class="welcome-btn-group">' +
+        '<button class="welcome-btn" onclick="appendParamToInput(\' results_per_keyword=5,keywords_per_batch=5 \')">标准</button>' +
+        '<button class="welcome-btn" onclick="appendParamToInput(\' results_per_keyword=10,keywords_per_batch=8 \')">中等</button>' +
+        '<button class="welcome-btn" onclick="appendParamToInput(\' results_per_keyword=30,keywords_per_batch=10 \')">最大</button>' +
       '</div>';
   }
 
@@ -123,6 +128,16 @@ $(document).ready(function() {
     // 聚焦输入框，方便用户直接修改或发送
     $('#chatInput').focus();
     // 自动调整输入框高度（如果有自动高度调整逻辑的话，触发 input 事件）
+    $('#chatInput').trigger('input');
+  };
+
+  // 暴露给全局的参数追加函数（追加到输入框内容后）
+  window.appendParamToInput = function(param) {
+    let currentVal = $('#chatInput').val();
+    $('#chatInput').val(currentVal + param);
+    // 聚焦输入框
+    $('#chatInput').focus();
+    // 自动调整输入框高度
     $('#chatInput').trigger('input');
   };
   
